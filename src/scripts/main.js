@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 'use strict';
 
 function showNotification(message, type) {
@@ -21,7 +22,7 @@ const firstPromise = new Promise((resolve, reject) => {
   const timerId = setTimeout(() => {
     document.removeEventListener('click', handleClick);
 
-    reject(new Error('First promise was rejected'));
+    reject('First promise was rejected');
   }, 3000);
 
   document.addEventListener('click', handleClick);
@@ -74,7 +75,7 @@ const thirdPromise = new Promise((resolve) => {
 
 firstPromise
   .then((message) => showNotification(message, 'success'))
-  .catch((error) => showNotification(error.message, 'error'));
+  .catch((message) => showNotification(message, 'error'));
 
 secondPromise.then((message) => showNotification(message, 'success'));
 
