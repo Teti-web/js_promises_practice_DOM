@@ -20,6 +20,7 @@ const firstPromise = new Promise((resolve, reject) => {
 
   const timerId = setTimeout(() => {
     document.removeEventListener('click', handleClick);
+
     reject(new Error('First promise was rejected'));
   }, 3000);
 
@@ -73,7 +74,7 @@ const thirdPromise = new Promise((resolve) => {
 
 firstPromise
   .then((message) => showNotification(message, 'success'))
-  .catch((message) => showNotification(message, 'error'));
+  .catch((error) => showNotification(error.message, 'error'));
 
 secondPromise.then((message) => showNotification(message, 'success'));
 
