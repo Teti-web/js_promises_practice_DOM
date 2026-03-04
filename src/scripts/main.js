@@ -10,46 +10,65 @@ function showNotification(message, type) {
 }
 
 const firstPromise = new Promise((resolve, reject) => {
-  document.addEventListener('click', (e) => {
+  function handleClick(e) {
     if (e.button === 0) {
+      clearTimeout(timerId);
+      document.removeEventListener('click', handleClick);
       resolve('First promise was resolved');
     }
-  });
+  }
 
-  setTimeout(() => {
+  const timerId = setTimeout(() => {
+    document.removeEventListener('click', handleClick);
     reject(new Error('First promise was rejected'));
   }, 3000);
+
+  document.addEventListener('click', handleClick);
 });
 
 const secondPromise = new Promise((resolve) => {
-  document.addEventListener('click', () => {
+  function handleLeft() {
+    document.removeEventListener('click', handleLeft);
+    document.removeEventListener('contextmenu', handleRight);
     resolve('Second promise was resolved');
-  });
+  }
 
-  document.addEventListener('contextmenu', () => {
+  function handleRight() {
+    document.removeEventListener('click', handleLeft);
+    document.removeEventListener('contextmenu', handleRight);
     resolve('Second promise was resolved');
-  });
+  }
+
+  document.addEventListener('click', handleLeft);
+  document.addEventListener('contextmenu', handleRight);
 });
 
 const thirdPromise = new Promise((resolve) => {
   let leftClicked = false;
   let rightClicked = false;
 
-  document.addEventListener('click', () => {
+  function handleLeft() {
     leftClicked = true;
 
     if (rightClicked) {
+      document.removeEventListener('click', handleLeft);
+      document.removeEventListener('contextmenu', handleRight);
       resolve('Third promise was resolved');
     }
-  });
+  }
 
-  document.addEventListener('contextmenu', () => {
+  function handleRight() {
     rightClicked = true;
 
     if (leftClicked) {
+      document.removeEventListener('click', handleLeft);
+      document.removeEventListener('contextmenu', handleRight);
       resolve('Third promise was resolved');
     }
-  });
+  }
+
+  document.addEventListener('click', handleLeft);
+  document.addEventListener('contextmenu', handleRight);
 });
 
 firstPromise
